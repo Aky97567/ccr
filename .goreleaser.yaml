@@ -1,0 +1,45 @@
+# https://goreleaser.com — run `goreleaser release --clean` on a `v*` tag.
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: .
+    binary: ccr
+    env:
+      - CGO_ENABLED=0
+    goos: [darwin, linux]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude: ["^docs:", "^test:", "^chore:"]
+
+brews:
+  - name: ccr
+    repository:
+      owner: Aky97567
+      name: homebrew-ccr
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/Aky97567/ccr"
+    description: "Star Claude Code sessions and resume them by name"
+    license: "MIT"
+    install: |
+      bin.install "ccr"
+    test: |
+      system "#{bin}/ccr", "version"
+    caveats: |
+      Run `ccr install-skill` to add the /ccr-register skill for Claude Code.

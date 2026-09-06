@@ -1,0 +1,7 @@
+# build output
+/ccr
+/dist/
+
+# registry backups, in case anyone runs the tool from here
+*.bak
+sessions.jsonl
