@@ -28,7 +28,7 @@ changelog:
   filters:
     exclude: ["^docs:", "^test:", "^chore:"]
 
-brews:
+homebrew_casks:
   - name: ccr
     repository:
       owner: Aky97567
@@ -37,9 +37,11 @@ brews:
     homepage: "https://github.com/Aky97567/ccr"
     description: "Star Claude Code sessions and resume them by name"
     license: "MIT"
-    install: |
-      bin.install "ccr"
-    test: |
-      system "#{bin}/ccr", "version"
-    caveats: |
-      Run `ccr install-skill` to add the /ccr-register skill for Claude Code.
+    caveats: "Run `ccr install-skill` to add the /ccr-register skill for Claude Code."
+    # Strip the quarantine xattr so the unsigned binary runs without a Gatekeeper prompt.
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/ccr"], sudo: false
+          end
