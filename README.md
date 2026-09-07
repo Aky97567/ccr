@@ -22,6 +22,10 @@ drop it on your `PATH`, then:
 ccr install-skill      # adds the /ccr-register skill for Claude Code
 ```
 
+The Homebrew cask pulls in [`fzf`](https://github.com/junegunn/fzf) as a
+dependency; that's the picker. If you install the raw binary instead and `fzf`
+isn't present, `ccr` falls back to a numbered prompt.
+
 ## Use
 
 Inside a Claude Code session, star it:
